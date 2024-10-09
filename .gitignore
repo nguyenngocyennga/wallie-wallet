@@ -40,11 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Bun lock file (if using Bun)
-bun.lockb
-
 # IDE and editor-specific files
 .vscode/
 .idea/
 .DS_Store
 *.swp
+
+# Bun lock file
+bun.lockb
