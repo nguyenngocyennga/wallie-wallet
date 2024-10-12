@@ -3,6 +3,8 @@ import { User } from "lucide-react";
 
 export default function Home() {
   return (
-    <UserButton/>
+    <div>
+      <h1>Dashboard Page</h1>
+    </div>
   );
 };
