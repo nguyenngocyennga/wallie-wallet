@@ -39,12 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# IDE and editor-specific files
-.vscode/
-.idea/
-.DS_Store
-*.swp
-
-# Bun lock file
-bun.lockb

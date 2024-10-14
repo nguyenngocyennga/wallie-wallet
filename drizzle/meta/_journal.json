@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1737378159086,
+      "tag": "0000_aromatic_boomerang",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1737379261669,
+      "tag": "0001_peaceful_namorita",
+      "breakpoints": true
+    }
+  ]
+}
