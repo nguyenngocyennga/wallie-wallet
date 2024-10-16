@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { QueryProviders } from "@/providers/query-provider";
+import { Toaster } from "@/components/ui/sonner";
+
 import "./globals.css";
+import { SheetProvider } from "@/providers/sheet-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +33,12 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {children}
+          <QueryProviders>
+            {/* Can safely use server-rendered content here */}
+            <SheetProvider />
+            <Toaster />
+            {children} 
+          </QueryProviders>
         </body>
       </html>
     </ClerkProvider>
