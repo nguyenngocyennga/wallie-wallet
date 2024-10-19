@@ -27,6 +27,7 @@ import {
 
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+import { useConfirm } from "@/hooks/use-confirm";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -43,6 +44,11 @@ export function DataTable<TData, TValue>({
   onDelete,
   disabled,
 }: DataTableProps<TData, TValue>) {
+  const [ConfirmationDialog, confirm] = useConfirm(
+    "Are you sure?", 
+    "You are about to perform bulk delete. This action cannot be undone."
+);
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -68,14 +74,15 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+        <ConfirmationDialog />
         <div className="flex items-center py-4">
             <Input
                 placeholder={`Filter ${filterKey}...`}
                 value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                     table.getColumn(filterKey)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
+                }
+                className="max-w-sm"
             />
             {table.getFilteredSelectedRowModel().rows.length > 0 && (
                 <Button
@@ -83,6 +90,14 @@ export function DataTable<TData, TValue>({
                     variant="outline"
                     size="sm"
                     className="ml-auto font-normal text-xs"
+                    onClick={ async () => {
+                        const confirmed = await confirm();
+
+                        if (confirmed) {
+                            onDelete(table.getFilteredSelectedRowModel().rows)
+                            table.resetRowSelection();
+                        }
+                    }}
                 >
                     <Trash className="size-4" />
                     Delete ({table.getFilteredSelectedRowModel().rows.length})

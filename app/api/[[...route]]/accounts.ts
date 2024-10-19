@@ -2,9 +2,10 @@ import { Hono } from 'hono';
 import { accounts, insertAccountSchema } from '@/db/schema';
 import { clerkMiddleware, getAuth } from '@hono/clerk-auth';
 import { db } from '@/db/drizzle';
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
 import { createId } from "@paralleldrive/cuid2";
+import { z } from 'zod';
 
 const app = new Hono()
     .get(
@@ -54,6 +55,38 @@ const app = new Hono()
 
                 return c.json({ data }); 
 
+            }
+        )
+        .post(
+            "/bulk-delete",
+            clerkMiddleware(),
+            zValidator(
+                "json",
+                z.object({ // custom zod schema to validate the request body
+                    ids: z.array(z.string()), // array of string ids
+                }),
+            ),
+            async (c) => {
+                const auth = getAuth(c);
+                const values = c.req.valid("json");
+
+                if (!auth?.userId) {
+                    return c.json({ error: "Unauthorized" }, 401);
+                }
+
+                const data = await db
+                    .delete(accounts)
+                    .where(
+                        and(
+                            eq(accounts.userId, auth.userId),
+                            inArray(accounts.id, values.ids)
+                        )
+                    )
+                    .returning({
+                        id: accounts.id, // return the id of the deleted accounts
+                    });
+                
+                return c.json({ data }); 
             }
         );
 
