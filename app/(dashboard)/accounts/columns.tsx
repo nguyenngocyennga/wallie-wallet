@@ -6,10 +6,14 @@ import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { InferResponseType } from "hono";
 import { client } from "@/lib/hono";
+import { Actions } from "./actions";
 
+// This type is used to define the shape of the data returned by the API: an array of objects with id and name properties
 export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>["data"][0];
 
+// This array defines the columns for the table
 export const columns: ColumnDef<ResponseType>[] = [
+  // The first column is a checkbox that allows the user to select all rows on the current page
   {
     id: "select",
     header: ({ table }) => (
@@ -32,6 +36,7 @@ export const columns: ColumnDef<ResponseType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+  // The second column is the name of the account
   {
     accessorKey: "name",
     // header: "Email",
@@ -47,4 +52,9 @@ export const columns: ColumnDef<ResponseType>[] = [
       )
     },
   },
+  // The third column is the actions column, which contains the Actions component
+  {
+    id: "actions",
+    cell: ({ row }) => <Actions id={row.original.id} />
+  }
 ];

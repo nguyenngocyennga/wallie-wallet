@@ -39,7 +39,9 @@ const app = new Hono()
         })),
         clerkMiddleware(),
         async (c) => {
+            // get the auth object from the request
             const auth = getAuth(c);
+            // get the id from the request
             const { id } = c.req.valid("param");
 
             if (!id) {
@@ -50,12 +52,15 @@ const app = new Hono()
                 return c.json({ error: "Unauthorized"}, 401 );
             }
 
+            // [data] is destructured from the array returned by .returning() for first item in the array or data: data[0]
             const [data] = await db
+                // select the id and name columns from the accounts table
                 .select({
                     id: accounts.id,
                     name: accounts.name,
                 })
                 .from(accounts)
+                // where the userId is the same as the auth userId and the id is the same as the request id
                 .where(
                     and(
                         eq(accounts.userId, auth.userId),
@@ -126,6 +131,95 @@ const app = new Hono()
             
             return c.json({ data }); 
         }
+    )
+    .patch(
+        "/:id",
+        clerkMiddleware(),
+        // validate the request parameters (id)
+        zValidator(
+            "param",
+            z.object({
+                id: z.string().optional(),
+            }),
+        ),
+        // validate the request body
+        zValidator(
+            "json",
+            insertAccountSchema.pick({
+                name: true,
+            })
+        ),
+        async (c) => {
+            const auth = getAuth(c);
+            const { id } = c.req.valid("param");
+            const values = c.req.valid("json");
+
+            if (!id) {
+                return c.json({ error: "Missing id" }, 400);
+            }
+
+            if (!auth?.userId) {
+                return c.json({ error: "Unauthorized" }, 401);
+            }
+
+            const [data] = await db
+                .update(accounts)
+                .set(values)
+                .where(
+                    and(
+                        eq(accounts.userId, auth.userId),
+                        eq(accounts.id, id)
+                    )
+                )
+                .returning();
+
+            if (!data) {
+                return c.json({ error: "Not found" }, 404);
+            }
+
+            return c.json({ data });
+        },
+    )
+    .delete(
+        "/:id",
+        clerkMiddleware(),
+        // validate the request parameters (id)
+        zValidator(
+            "param",
+            z.object({
+                id: z.string().optional(),
+            }),
+        ),
+        async (c) => {
+            const auth = getAuth(c);
+            const { id } = c.req.valid("param");
+
+            if (!id) {
+                return c.json({ error: "Missing id" }, 400);
+            }
+
+            if (!auth?.userId) {
+                return c.json({ error: "Unauthorized" }, 401);
+            }
+
+            const [data] = await db
+                .delete(accounts)
+                .where(
+                    and(
+                        eq(accounts.userId, auth.userId),
+                        eq(accounts.id, id)
+                    )
+                )
+                .returning({
+                    id: accounts.id,
+                });
+
+            if (!data) {
+                return c.json({ error: "Not found" }, 404);
+            }
+
+            return c.json({ data });
+        },
     );
 
 export default app;
