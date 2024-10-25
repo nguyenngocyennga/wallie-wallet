@@ -15,6 +15,13 @@
       "when": 1737379261669,
       "tag": "0001_peaceful_namorita",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1739026351852,
+      "tag": "0002_material_ulik",
+      "breakpoints": true
     }
   ]
 }

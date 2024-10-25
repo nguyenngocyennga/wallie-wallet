@@ -1,6 +1,6 @@
 "use client";
 
-import { useOpenAccount } from "@/features/accounts/hooks/use-open-accounts";
+import { useOpenCategory } from "@/features/categories/hooks/use-open-categories";
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { 
@@ -9,7 +9,7 @@ import {
     DropdownMenuItem, 
     DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { useDeleteAccount } from "@/features/accounts/api/use-delete-account";
+import { useDeleteCategory } from "@/features/categories/api/use-delete-category";
 import { useConfirm } from "@/hooks/use-confirm";
 
 // Props type for the Actions component
@@ -17,16 +17,16 @@ type Props = {
     id: string;
 }
 
-// Actions component that renders a dropdown menu with an Edit option that opens the account modal dialog box
+// Actions component that renders a dropdown menu with an Edit option that opens the category modal dialog box
 export const Actions = ({ id }: Props) => {
     const [ ConfirmDialog, confirm ] = useConfirm(
         "Are you sure?",
-        "You are about to delete this account. This action cannot be undone.",
+        "You are about to delete this category. This action cannot be undone.",
     );
-    const deleteMutation = useDeleteAccount(id);
+    const deleteMutation = useDeleteCategory(id);
 
-    // useOpenAccount hook to manage the state of the open account modal dialog box in the application
-    const { onOpen } = useOpenAccount();
+    // useOpenCategory hook to manage the state of the open category modal dialog box in the application
+    const { onOpen } = useOpenCategory();
 
     const handleDelete = async () => {
         const ok = await confirm();
@@ -36,7 +36,7 @@ export const Actions = ({ id }: Props) => {
         }
     }
 
-    // Render the dropdown menu with an Edit option that opens the account modal dialog box when clicked with the provided id
+    // Render the dropdown menu with an Edit option that opens the category modal dialog box when clicked with the provided id
     return (
         <>
             <ConfirmDialog/>
