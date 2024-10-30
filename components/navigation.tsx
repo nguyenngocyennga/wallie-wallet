@@ -58,7 +58,7 @@ export const Navigation = () => {
                 </SheetTrigger>
                 <SheetContent side="left" className='px-2'>
                     <nav className='flex flex-col gap-y-2 pt-6'>
-                        {/* <p>Wallie Wallet</p> */}
+                        {/* <p>Wallie Finance</p> */}
                         {routes.map((route) => (
                             <Button
                                 variant={route.href === pathname ? 'secondary' : 'ghost'}
