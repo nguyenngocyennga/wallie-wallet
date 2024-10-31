@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
-import { AccountForm } from "./account-form";
+import { AccountForm } from "./transaction-form";
 import { insertAccountSchema } from "@/db/schema";
 import { useOpenAccount } from "../hooks/use-open-accounts";
 import { useGetAccount } from "../api/use-get-transaction";
