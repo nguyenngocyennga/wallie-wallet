@@ -11,7 +11,6 @@ import { parse, subDays } from 'date-fns';
 const app = new Hono()
     .get(
         "/",
-        // filter transactions by date (from and to) and accountId
         zValidator("query", z.object({
             from: z.string().optional(),
             to: z.string().optional(),
@@ -21,7 +20,6 @@ const app = new Hono()
         async (c) => {
             const auth = getAuth(c);
 
-            // destructuring the query parameters from the request
             const { from, to, accountId } = c.req.valid("query");
 
             if (!auth?.userId) {
@@ -29,7 +27,7 @@ const app = new Hono()
             }
 
             const defaultTo = new Date();
-            const defaultFrom = subDays(defaultTo, 30);
+            const defaultFrom = subDays(defaultTo, 100);
 
             const startDate = from 
                 ? parse(from, "yyyy-MM-dd", new Date()) 
@@ -74,9 +72,7 @@ const app = new Hono()
         })),
         clerkMiddleware(),
         async (c) => {
-            // get the auth object from the request
             const auth = getAuth(c);
-            // get the id from the request
             const { id } = c.req.valid("param");
 
             if (!id) {
@@ -121,7 +117,7 @@ const app = new Hono()
         })),
         async (c) => {
             const auth = getAuth(c);
-            const values = c.req.valid("json"); // validated by zValidator
+            const values = c.req.valid("json");
 
             if (!auth?.userId) {
                 return c.json({ error: "Unauthorized" }, 401);
@@ -195,7 +191,7 @@ const app = new Hono()
                 .with(transactionsToDelete) // use the subquery
                 .delete(transactions)
                 .where(
-                    inArray(transactions.id, sql`select id from ${transactionsToDelete}`)
+                    inArray(transactions.id, sql`(select id from ${transactionsToDelete})`)
                 )
                 .returning({
                     id: transactions.id,
@@ -296,7 +292,10 @@ const app = new Hono()
                 .with(transactionsToDelete)
                 .delete(transactions)
                 .where(
-                    inArray(transactions.id, sql`(select id from ${transactionsToDelete})`)
+                    inArray(
+                        transactions.id, 
+                        sql`(select id from ${transactionsToDelete})`
+                    ),
                 )
                 .returning({
                     id: transactions.id,

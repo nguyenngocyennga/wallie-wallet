@@ -26,7 +26,7 @@ export const useEditCategory = (id?: string) => {
             toast.success('Category updated');
             queryClient.invalidateQueries({ queryKey: ['category', { id }] }); // refetch the edited category
             queryClient.invalidateQueries({ queryKey: ['categories'] }); // refetch all categories
-            // TODO: invalidate summary and transactions
+            queryClient.invalidateQueries({ queryKey: ['transactions'] }); // refetch all categories
         },
         onError: () => {
             toast.error('Failed to edit category');
