@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
+import { convertAmountFromMiliunits } from "@/lib/utils";
 
 // This hook fetches transaction data from the API using the provided id when the hook is called with an id value
 export const useGetTransaction = ( id?: string ) => {
@@ -18,7 +19,10 @@ export const useGetTransaction = ( id?: string ) => {
             }
 
             const { data } = await response.json();
-            return data;
+            return {
+                ...data,
+                amount: convertAmountFromMiliunits(data.amount),
+            };
         },
     });
 
