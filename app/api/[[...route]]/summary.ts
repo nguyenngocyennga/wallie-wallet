@@ -6,7 +6,6 @@ import { zValidator } from "@hono/zod-validator";
 import { subDays, parse, differenceInDays } from "date-fns";
 import { lt, and, eq, gte, lte, sql, sum, desc } from "drizzle-orm";
 import { Hono } from "hono";
-import { act } from "react";
 import { z } from "zod";
 
 const app = new Hono()
