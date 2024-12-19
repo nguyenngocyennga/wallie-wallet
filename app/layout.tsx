@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wallie Finance",
+  title: "Wallie Wallet",
   description: "A personal finance app.",
 };
 

@@ -7,7 +7,7 @@ export const HeaderLogo = () => {
             <div className="items-center hidden lg:flex cursor-pointer">
                 <Image src="/logo.svg" alt="Logo" width={28} height={28} />
                 <p className="font-semibold text-white text-2xl ml-2.5">
-                    Wallie Finance
+                    Wallie Wallet
                 </p>
             </div>
         </Link>
