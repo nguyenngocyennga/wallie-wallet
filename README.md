@@ -3,6 +3,7 @@
 Wallie Wallet is a personal finance application designed to help users manage their finances effectively.
 
 **Web Demo**: https://vimeo.com/1058518949
+
 **Mobile Demo**: https://vimeo.com/1058517468
 
 ## Table of Contents
